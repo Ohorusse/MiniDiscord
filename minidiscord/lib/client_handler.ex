@@ -24,7 +24,7 @@ defmodule MiniDiscord.ClientHandler do
     end
 
     MiniDiscord.Salon.rejoindre(salon, self())
-    MiniDiscord.Salon.broadcast(salon, "📢 #{pseudo} a rejoint ##{salon}\r\n")
+    MiniDiscord.Salon.broadcast(salon, "#{pseudo} a rejoint ##{salon}\r\n")
     :gen_tcp.send(socket, "Tu es dans ##{salon} — écris tes messages !\r\n")
   end
 
@@ -73,7 +73,7 @@ defmodule MiniDiscord.ClientHandler do
 
       {:error, reason} ->
         Logger.info("Client déconnecté : #{inspect(reason)}")
-        MiniDiscord.Salon.broadcast(salon, "👋 #{pseudo} a quitté ##{salon}\r\n")
+        MiniDiscord.Salon.broadcast(salon, "#{pseudo} a quitté ##{salon}\r\n")
         MiniDiscord.Salon.quitter(salon, self())
         liberer_pseudo(pseudo)
     end
@@ -92,14 +92,14 @@ defmodule MiniDiscord.ClientHandler do
           :gen_tcp.send(socket, "Usage : /join <nom>\r\n")
           {:ok, salon}
         else
-          MiniDiscord.Salon.broadcast(salon, "👋 #{pseudo} a quitté ##{salon}\r\n")
+          MiniDiscord.Salon.broadcast(salon, "#{pseudo} a quitté ##{salon}\r\n")
           MiniDiscord.Salon.quitter(salon, self())
           entrer_salon(socket, pseudo, nouveau_salon)
           {:ok, nouveau_salon}
         end
 
       ["/quit"] ->
-        MiniDiscord.Salon.broadcast(salon, "👋 #{pseudo} a quitté ##{salon}\r\n")
+        MiniDiscord.Salon.broadcast(salon, "#{pseudo} a quitté ##{salon}\r\n")
         MiniDiscord.Salon.quitter(salon, self())
         liberer_pseudo(pseudo)
         :gen_tcp.close(socket)
