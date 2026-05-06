@@ -49,14 +49,18 @@ defmodule MiniDiscord.Client do
     recv_print(socket)
   end
 
-  defp receive_loop(socket) do
+  defp receive_loop(socket, host, port) do
     case :gen_tcp.recv(socket, 0) do
       {:ok, msg} ->
         IO.write(msg)
-        receive_loop(socket)
+        receive_loop(socket, host, port)
 
-      {:error, _} ->
-        IO.puts("Déconnecté")
+      {:error, reason} ->
+        IO.puts("\nConnexion perdue (#{inspect(reason)}). Reconnexion...")
+
+        :gen_tcp.close(socket)
+
+        connect_with_retry(host, port, 1)
     end
   end
 
